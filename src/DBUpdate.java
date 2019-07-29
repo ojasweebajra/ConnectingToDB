@@ -1,7 +1,5 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Scanner;
 
 public class DBUpdate {
 
@@ -13,9 +11,22 @@ public class DBUpdate {
         try {
             Connection conn = DriverManager.getConnection(host, uName, uPass);
             Statement stmt = conn.createStatement();
-            int rowsaffected = stmt.executeUpdate("update workers" + " set First_Name = 'Ojaswee'" + "where ID = 7");
 
-            System.out.println("rows changed: " + rowsaffected);
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter the ID you wish to change: ");
+            Integer newID = input.nextInt();
+            System.out.println("Enter the name you wish to change to: ");
+            String newName = input.next();
+
+            String updateSQL = "update workers set First_Name = ? where ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(updateSQL);
+            pstmt.setString(1,newName);
+            pstmt.setInt(2, newID);
+
+            pstmt.executeUpdate();
+//            int rowsaffected = stmt.executeUpdate("update workers" + " set First_Name = newName" + "where ID = newID");
+//
+//            System.out.println("rows changed: " + rowsaffected);
 
             conn.close();
         } catch (SQLException e) {
